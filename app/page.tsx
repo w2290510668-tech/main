@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const features = [
   "在线预约申请：填写来访信息并提交",
   "审批工作台：支持逐条审批与补件",
@@ -26,9 +28,9 @@ export default function HomePage() {
           第一版预约首页（MVP）：商务简约蓝色风格，先聚焦“可预约、可审批、可签到、可统计”。
         </p>
         <div className="actions">
-          <button type="button" className="primary">
+          <Link href="/booking" className="primary action-link">
             立即预约
-          </button>
+          </Link>
           <button type="button" className="secondary">
             查看预约记录
           </button>

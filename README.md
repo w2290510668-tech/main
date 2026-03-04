@@ -14,6 +14,7 @@ npm run dev
 ## 当前实现
 
 - `app/page.tsx`：预约首页（商务简约蓝色风格）
+- `app/booking/page.tsx`：预约表单页（由“立即预约”进入）
 - `app/layout.tsx`：全局布局与页面元数据
 - `app/globals.css`：全局样式变量与基础样式
 
