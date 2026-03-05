@@ -67,6 +67,10 @@ export default function AdminPage() {
 
   return (
     <main className="page admin-page">
+      <section className="card company-banner">
+        <p className="company-name">XX公司访客管理系统</p>
+      </section>
+
       <section className="card">
         <p className="tag">内部管理</p>
         <h1>预约审核工作台</h1>
@@ -92,35 +96,37 @@ export default function AdminPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
-                <tr key={row.id}>
-                  <td>{row.id}</td>
-                  <td>{row.visitor_name}</td>
-                  <td>{row.phone}</td>
-                  <td>{row.host_name}</td>
-                  <td>{row.visit_date}</td>
-                  <td>{row.visit_time_slot}</td>
-                  <td>
-                    <span
-                      className={`status-pill ${
-                        row.status === "已通过" ? "approved" : "pending"
-                      }`}
-                    >
-                      {row.status}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      className="primary"
-                      disabled={row.status !== "待审核" || updatingId === row.id}
-                      onClick={() => approve(row.id)}
-                    >
-                      {updatingId === row.id ? "处理中..." : "通过"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {rows.map((row) => {
+                const isApproved = row.status === "已通过";
+                const isUpdating = updatingId === row.id;
+                const isDisabled = isApproved || isUpdating;
+
+                return (
+                  <tr key={row.id}>
+                    <td>{row.id}</td>
+                    <td>{row.visitor_name}</td>
+                    <td>{row.phone}</td>
+                    <td>{row.host_name}</td>
+                    <td>{row.visit_date}</td>
+                    <td>{row.visit_time_slot}</td>
+                    <td>
+                      <span className={`status-pill ${isApproved ? "approved" : "pending"}`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className={isDisabled ? "button-disabled" : "primary"}
+                        disabled={isDisabled}
+                        onClick={() => approve(row.id)}
+                      >
+                        {isApproved ? "已通过" : isUpdating ? "处理中..." : "通过"}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
 
               {!rows.length ? (
                 <tr>
