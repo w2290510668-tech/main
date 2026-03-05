@@ -2,23 +2,21 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type SubmitState = {
   loading: boolean;
-  error: string;
-  success: string;
 };
 
 export default function BookingPage() {
+  const router = useRouter();
   const [state, setState] = useState<SubmitState>({
-    loading: false,
-    error: "",
-    success: ""
+    loading: false
   });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setState({ loading: true, error: "", success: "" });
+    setState({ loading: true });
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -27,17 +25,20 @@ export default function BookingPage() {
     const phone = String(formData.get("mobile") || "").trim();
 
     if (!visitorName) {
-      setState({ loading: false, error: "请填写姓名", success: "" });
+      window.alert("请填写姓名");
+      setState({ loading: false });
       return;
     }
 
     if (!phone) {
-      setState({ loading: false, error: "请填写手机号", success: "" });
+      window.alert("请填写手机号");
+      setState({ loading: false });
       return;
     }
 
     if (!/^1\d{10}$/.test(phone)) {
-      setState({ loading: false, error: "手机号格式不正确，请输入11位手机号", success: "" });
+      window.alert("手机号格式不正确，请输入11位手机号");
+      setState({ loading: false });
       return;
     }
 
@@ -63,16 +64,15 @@ export default function BookingPage() {
     const result = (await response.json()) as { error?: string; id?: number };
 
     if (!response.ok) {
-      setState({ loading: false, error: result.error ?? "提交失败，请稍后再试", success: "" });
+      window.alert(result.error ?? "提交失败，请稍后再试");
+      setState({ loading: false });
       return;
     }
 
     form.reset();
-    setState({
-      loading: false,
-      error: "",
-      success: `预约提交成功，单号ID：${result.id ?? "已生成"}，当前状态：待审核。`
-    });
+    setState({ loading: false });
+    window.alert(`预约提交成功，单号ID：${result.id ?? "已生成"}，当前状态：待审核。`);
+    router.push("/");
   }
 
   return (
@@ -161,8 +161,6 @@ export default function BookingPage() {
           <span>我已阅读并同意个人信息处理说明。</span>
         </label>
 
-        {state.error ? <p className="form-message error">{state.error}</p> : null}
-        {state.success ? <p className="form-message success">{state.success}</p> : null}
 
         <div className="actions">
           <button type="submit" className="primary" disabled={state.loading}>
